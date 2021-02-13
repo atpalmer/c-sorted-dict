@@ -49,8 +49,23 @@ void Items_print(Items *this) {
     printf("\n");
 }
 
+void Items_sort(Items *this) {
+    /* selection sort */
+    for(int place = 0; place < this->count - 1; ++place) {
+        for(int seek = place + 1; seek < this->count; ++seek) {
+            if(this->items[seek]->key < this->items[place]->key) {
+                Item *tmp = this->items[place];
+                this->items[place] = this->items[seek];
+                this->items[seek] = tmp;
+            }
+        }
+    }
+}
+
 int main(void) {
     Items *items = Items_new();
+    Items_print(items);
+    Items_sort(items);
     Items_print(items);
     Items_free(items);
 }
