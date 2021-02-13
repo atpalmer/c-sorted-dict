@@ -27,9 +27,10 @@ void Item_free(Item *this) {
 }
 
 Items *Items_new(void) {
-    Items *new = malloc(sizeof *new + 10 * sizeof(Item *));
+    static const int COUNT = 15;
+    Items *new = malloc(sizeof *new + COUNT * sizeof(Item *));
     new->count = 0;
-    for(int i = 0; i < 10; ++i) {
+    for(int i = 0; i < COUNT; ++i) {
         new->items[i] = Item_rand();
         ++new->count;
     }
