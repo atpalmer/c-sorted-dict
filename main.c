@@ -63,10 +63,27 @@ void Items_sort(Items *this) {
     }
 }
 
-int main(void) {
+void Items_insertion_sort(Items *this) {
+    for(int curr = 1; curr < this->count; ++curr) {
+        Item *item = this->items[curr];
+        int seek = curr - 1;
+        while(seek > -1 && item->key < this->items[seek]->key) {
+            this->items[seek + 1] = this->items[seek];
+            --seek;
+        }
+        this->items[seek + 1] = item;
+    }
+}
+
+void run(void (*sort)(Items *)) {
     Items *items = Items_new();
     Items_print(items);
-    Items_sort(items);
+    sort(items);
     Items_print(items);
     Items_free(items);
+}
+
+int main(void) {
+    run(Items_sort);
+    run(Items_insertion_sort);
 }
