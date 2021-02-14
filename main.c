@@ -50,8 +50,7 @@ void Items_print(Items *this) {
     printf("\n");
 }
 
-void Items_sort(Items *this) {
-    /* selection sort */
+void Items_selection_sort(Items *this) {
     for(int place = 0; place < this->count - 1; ++place) {
         for(int seek = place + 1; seek < this->count; ++seek) {
             if(this->items[seek]->key < this->items[place]->key) {
@@ -84,6 +83,6 @@ void run(void (*sort)(Items *)) {
 }
 
 int main(void) {
-    run(Items_sort);
+    run(Items_selection_sort);
     run(Items_insertion_sort);
 }
