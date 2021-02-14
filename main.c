@@ -26,9 +26,18 @@ void Item_free(Item *this) {
     free(this);
 }
 
+Item *Item_copy(Item *this) {
+    Item *new = malloc(sizeof *new);
+    new->key = this->key;
+    new->c = this->c;
+    return new;
+}
+
+#define ITEMS_ALLOC(count) (malloc(sizeof(Items) + count * sizeof(Item *)))
+
 Items *Items_new(void) {
     static const int COUNT = 15;
-    Items *new = malloc(sizeof *new + COUNT * sizeof(Item *));
+    Items *new = ITEMS_ALLOC(COUNT);
     new->count = 0;
     for(int i = 0; i < COUNT; ++i) {
         new->items[i] = Item_rand();
@@ -41,6 +50,16 @@ void Items_free(Items *this) {
     for(int i = 0; i < this->count; ++i)
         Item_free(this->items[i]);
     free(this);
+}
+
+Items *Items_copy(Items *this) {
+    Items *new = ITEMS_ALLOC(this->count);
+    new->count = 0;
+    for(int i = 0; i < this->count; ++i) {
+        new->items[i] = Item_copy(this->items[i]);
+        ++new->count;
+    }
+    return new;
 }
 
 void Items_print(Items *this) {
@@ -74,8 +93,8 @@ void Items_insertion_sort(Items *this) {
     }
 }
 
-void run(void (*sort)(Items *)) {
-    Items *items = Items_new();
+void run(Items *_items, void (*sort)(Items *)) {
+    Items *items = Items_copy(_items);
     Items_print(items);
     sort(items);
     Items_print(items);
@@ -83,6 +102,8 @@ void run(void (*sort)(Items *)) {
 }
 
 int main(void) {
-    run(Items_selection_sort);
-    run(Items_insertion_sort);
+    Items *items = Items_new();
+    run(items, Items_selection_sort);
+    run(items, Items_insertion_sort);
+    Items_free(items);
 }
